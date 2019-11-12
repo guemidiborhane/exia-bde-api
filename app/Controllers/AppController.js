@@ -18,7 +18,7 @@ export default {
         let request_body = prepareBody(req),
             [columns, values] = sqlParametrize(request_body)
 
-        callback(`INSERT INTO ${req.params.table} (${columns}) VALUES (${values})`, req, res)
+        callback(`INSERT INTO ${req.params.table} (${columns}) VALUES (${values})`, req, res, 201)
     },
 
     update: function (req, res) {

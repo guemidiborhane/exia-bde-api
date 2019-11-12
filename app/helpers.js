@@ -9,18 +9,18 @@ const db = require('../config/database'),
       rounds = 12
 
 
-const respond = (response, error, result) => {
+const respond = (response, error, result, http_code) => {
     if (error) {
-        response.status(404).json({ error })
+        response.status(400).json({ error })
     } else {
-        response.status(200).json(result)
+        response.status(http_code).json(result)
     }
 }
 
-export const callback = (query, request, response) => {
+export const callback = (query, request, response, http_code = 200) => {
     if (models.includes(request.params.table)) {
         db.query(query, function (error, result) {
-            respond(response, error, result)
+            respond(response, error, result, http_code)
         })
     } else {
         response.status(404).json({
@@ -61,7 +61,7 @@ export const prepareBody = (request) => {
 export const checkToken = (req, res, next) => {
     let token = req.headers['x-access-token'] || req.headers['authorization'] // Express headers are auto converted to lowercase
     if (token === undefined) {
-        res.status(401).json({
+        return res.status(400).json({
             status: 'error',
             messge: 'No token was provided'
         })
