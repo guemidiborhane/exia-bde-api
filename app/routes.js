@@ -1,9 +1,9 @@
-import {index, show, store, update, destroy} from './controller'
+import AppController from './controller'
 
 export const routes = (app) => {
-    app.get('/:table', index)
-    app.get('/:table/:id', show)
-    app.post('/:table', store)
-    app.put('/:table/:id', update)
-    app.delete('/:table/:id', destroy)
+    app.get('/:table', AppController.index)
+    app.get('/:table/:id', AppController.show)
+    app.post('/:table', AppController.store)
+    app.put('/:table/:id', AppController.update)
+    app.delete('/:table/:id', AppController.destroy)
 }
