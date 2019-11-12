@@ -1,15 +1,15 @@
 require('dotenv').config()
 
-import app from '../config/app'
 import bcrypt from 'bcrypt'
 import array from 'locutus/php/array'
+import jwt from 'jsonwebtoken'
 
 const db = require('../config/database'),
       models = ['events', 'users'],
       rounds = 12
 
 
-const respond = function (response, error, result) {
+const respond = (response, error, result) => {
     if (error) {
         response.status(404).json({ error })
     } else {
@@ -56,4 +56,37 @@ export const prepareBody = (request) => {
     }
 
     return request_body
+}
+
+export const checkToken = (req, res, next) => {
+    let token = req.headers['x-access-token'] || req.headers['authorization'] // Express headers are auto converted to lowercase
+    if (token === undefined) {
+        res.status(401).json({
+            status: 'error',
+            messge: 'No token was provided'
+        })
+    }
+    if (token.startsWith('Bearer ')) {
+        // Remove Bearer from string
+        token = token.slice(7, token.length)
+    }
+
+    if (token) {
+        jwt.verify(token, process.env.APP_KEY, (err, decoded) => {
+            if (err) {
+                return res.status(401).json({
+                    success: false,
+                    message: 'Token is not valid'
+                })
+            } else {
+                req.decoded = decoded
+                next()
+            }
+        })
+    } else {
+        return res.json({
+            success: false,
+            message: 'Auth token is not supplied'
+        })
+    }
 }

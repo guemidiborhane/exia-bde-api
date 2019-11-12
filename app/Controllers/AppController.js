@@ -1,6 +1,6 @@
-import {callback, sqlParametrize, prepareBody} from './helpers'
+import {callback, sqlParametrize, prepareBody} from '../helpers'
 
-const db = require('../config/database')
+const db = require('../../config/database')
 
 export default {
     index: function (req, res) {
