@@ -5,7 +5,7 @@ import array from 'locutus/php/array'
 import jwt from 'jsonwebtoken'
 
 const db = require('../config/database'),
-      models = ['events', 'users'],
+      models = ['events', 'users', 'products'],
       rounds = 12
 
 
@@ -47,6 +47,7 @@ export const prepareBody = (request) => {
         } else {
             request_body.updated_at = request_body.created_at
         }
+        request_body.user_id = request.decoded.id
     } else {
         request_body.updated_at = current_datetime
     }
