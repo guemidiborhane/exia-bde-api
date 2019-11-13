@@ -14,7 +14,8 @@ export default {
                 })
             } else {
                 let user = result[0]
-                if (bcrypt.compareSync(request.body.password, user.password)) {
+                let hash = user.password.replace(/^\$2y(.+)$/i, '$2a$1')
+                if (bcrypt.compareSync(request.body.password, hash)) {
                     const token = jwt.sign({id: user.id}, process.env.APP_KEY, {expiresIn: '1h'})
                     response.status(200).json({
                         status: 'success',
